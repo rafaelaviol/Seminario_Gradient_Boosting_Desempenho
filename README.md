@@ -10,8 +10,11 @@ Investigar se características históricas das equipes podem contribuir para a p
 ## Integrantes
 
 Rafaela Oliveira Viol
+
 Henrique Meneses Catanho da Silva
+
 Luis Henrique Balduino Neto Comini
+
 Felipe Yuji Sato Silva
 
 
@@ -31,11 +34,17 @@ Fonte dos dados: https://github.com/adaoduque/Brasileirao_Dataset
 ## Tecnologias e Dependências
 
 Python
+
 Pandas
+
 NumPy
+
 Matplotlib
+
 Scikit-learn
+
 XGBoost
+
 Joblib
 
 ## Como executar o Projeto

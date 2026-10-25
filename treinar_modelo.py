@@ -1,0 +1,481 @@
+
+# SEMINÁRIO: PREVISÃO DE RESULTADOS/DESEMPENHO DO BRASILEIRÃO COM GRADIENT BOOSTING
+# Treinamento: 2023 e 2024
+# Teste: 2025
+
+
+import json
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+from collections import defaultdict
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import (
+    accuracy_score,
+    f1_score,
+    classification_report,
+    confusion_matrix,
+    ConfusionMatrixDisplay
+)
+from sklearn.dummy import DummyClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from xgboost import XGBClassifier
+
+
+
+# 1. Carregar os dados
+
+
+df_2023 = pd.read_csv("brasileirao-2023-padronizado.csv")
+df_2024 = pd.read_csv("brasileirao-2024-padronizado.csv")
+
+with open("brasileirao-2025.json", "r", encoding="utf-8") as arquivo:
+    dados_2025 = json.load(arquivo)
+
+partidas_2025 = []
+
+for rodada, jogos in dados_2025.items():
+    for jogo in jogos:
+
+        gols_casa = int(jogo["goals"]["home"])
+        gols_fora = int(jogo["goals"]["away"])
+
+        if gols_casa > gols_fora:
+            resultado = "Vitória"
+        elif gols_casa < gols_fora:
+            resultado = "Derrota"
+        else:
+            resultado = "Empate"
+
+        data_texto = str(jogo["date"]).strip()
+
+        if len(data_texto.split("/")) == 2:
+            data_texto += "/25"
+
+        data_partida = pd.to_datetime(
+            data_texto,
+            dayfirst=True
+        )
+
+        partidas_2025.append({
+            "temporada": 2025,
+            "rodada": int(rodada),
+            "data": data_partida,
+            "mandante": jogo["clubs"]["home"],
+            "visitante": jogo["clubs"]["away"],
+            "gols_mandante": gols_casa,
+            "gols_visitante": gols_fora,
+            "resultado_mandante": resultado
+        })
+
+df_2025 = pd.DataFrame(partidas_2025)
+
+df = pd.concat(
+    [df_2023, df_2024, df_2025],
+    ignore_index=True
+)
+
+df["data"] = pd.to_datetime(df["data"])
+
+df = df.sort_values(
+    ["data", "temporada", "rodada"]
+).reset_index(drop=True)
+
+print("PARTIDAS POR TEMPORADA")
+print(df.groupby("temporada").size())
+
+
+
+# 2. Criar as variáveis históricas
+
+
+historico = defaultdict(list)
+elo = defaultdict(lambda: 1500.0)
+
+K = 20
+VANTAGEM_MANDANTE = 60
+
+linhas_features = []
+
+for data, jogos_do_dia in df.groupby("data", sort=True):
+
+    atualizacoes = []
+
+    # Calcular as variáveis antes de atualizar os resultados do dia
+    for indice, jogo in jogos_do_dia.iterrows():
+
+        casa = jogo["mandante"]
+        fora = jogo["visitante"]
+
+        hist_casa = historico[casa]
+        hist_fora = historico[fora]
+
+        def media_historica(hist, coluna):
+            if not hist:
+                return 0.0
+
+            return float(
+                np.mean([item[coluna] for item in hist])
+            )
+
+        ppg_casa = media_historica(hist_casa, "pontos")
+        gols_marcados_casa = media_historica(
+            hist_casa, "gols_marcados"
+        )
+        gols_sofridos_casa = media_historica(
+            hist_casa, "gols_sofridos"
+        )
+
+        ppg_fora = media_historica(hist_fora, "pontos")
+        gols_marcados_fora = media_historica(
+            hist_fora, "gols_marcados"
+        )
+        gols_sofridos_fora = media_historica(
+            hist_fora, "gols_sofridos"
+        )
+
+        elo_casa = elo[casa]
+        elo_fora = elo[fora]
+
+        linhas_features.append({
+            "indice_original": indice,
+            "elo_mandante": elo_casa,
+            "elo_visitante": elo_fora,
+            "diferenca_elo": elo_casa - elo_fora,
+            "ppg_mandante": ppg_casa,
+            "ppg_visitante": ppg_fora,
+            "media_gols_marcados_mandante": gols_marcados_casa,
+            "media_gols_sofridos_mandante": gols_sofridos_casa,
+            "media_gols_marcados_visitante": gols_marcados_fora,
+            "media_gols_sofridos_visitante": gols_sofridos_fora
+        })
+
+        atualizacoes.append(jogo)
+
+    # Atualizar o histórico após calcular as variáveis do dia
+    for jogo in atualizacoes:
+
+        casa = jogo["mandante"]
+        fora = jogo["visitante"]
+
+        gols_casa = int(jogo["gols_mandante"])
+        gols_fora = int(jogo["gols_visitante"])
+
+        if gols_casa > gols_fora:
+            pontos_casa, pontos_fora = 3, 0
+            resultado_real = 1.0
+        elif gols_casa < gols_fora:
+            pontos_casa, pontos_fora = 0, 3
+            resultado_real = 0.0
+        else:
+            pontos_casa, pontos_fora = 1, 1
+            resultado_real = 0.5
+
+        historico[casa].append({
+            "pontos": pontos_casa,
+            "gols_marcados": gols_casa,
+            "gols_sofridos": gols_fora
+        })
+
+        historico[fora].append({
+            "pontos": pontos_fora,
+            "gols_marcados": gols_fora,
+            "gols_sofridos": gols_casa
+        })
+
+        elo_casa_anterior = elo[casa]
+        elo_fora_anterior = elo[fora]
+
+        expectativa_casa = 1 / (
+            1 + 10 ** (
+                (
+                    elo_fora_anterior
+                    - (elo_casa_anterior + VANTAGEM_MANDANTE)
+                ) / 400
+            )
+        )
+
+        elo[casa] = elo_casa_anterior + K * (
+            resultado_real - expectativa_casa
+        )
+
+        elo[fora] = elo_fora_anterior + K * (
+            (1 - resultado_real) - (1 - expectativa_casa)
+        )
+
+
+# Associar as variáveis às partidas
+df_features = pd.DataFrame(linhas_features)
+
+df_features = (
+    df_features
+    .set_index("indice_original")
+    .sort_index()
+)
+
+df_modelo = df.join(df_features)
+
+print("\nValores ausentes:")
+print(df_modelo.isnull().sum())
+
+
+
+# 3. Selecionar as variáveis do modelo
+
+
+colunas_features = [
+    "elo_mandante",
+    "elo_visitante",
+    "diferenca_elo",
+    "ppg_mandante",
+    "ppg_visitante",
+    "media_gols_marcados_mandante",
+    "media_gols_sofridos_mandante",
+    "media_gols_marcados_visitante",
+    "media_gols_sofridos_visitante"
+]
+
+# Treinar com 2023 e 2024
+treino = df_modelo[
+    df_modelo["temporada"].isin([2023, 2024])
+].copy()
+
+# Testar com 2025
+teste = df_modelo[
+    df_modelo["temporada"] == 2025
+].copy()
+
+X_train = treino[colunas_features]
+X_test = teste[colunas_features]
+
+codificador = LabelEncoder()
+
+y_train = codificador.fit_transform(
+    treino["resultado_mandante"]
+)
+
+y_test = codificador.transform(
+    teste["resultado_mandante"]
+)
+
+print("\nClasses:", list(codificador.classes_))
+print("Partidas de treinamento:", len(X_train))
+print("Partidas de teste:", len(X_test))
+
+
+
+# 4. Treinar o xgboost com hiperparâmetros ajustados
+
+
+modelo = XGBClassifier(
+    objective="multi:softprob",
+    num_class=3,
+    n_estimators=300,
+    max_depth=2,
+    learning_rate=0.03,
+    min_child_weight=5,
+    subsample=0.8,
+    colsample_bytree=0.8,
+    reg_lambda=2,
+    eval_metric="mlogloss",
+    random_state=42
+)
+
+modelo.fit(X_train, y_train)
+
+print("\nTreinamento concluído!")
+
+
+
+# 5. Fazer as previsões
+
+
+y_pred = modelo.predict(X_test)
+
+resultados_previstos = codificador.inverse_transform(y_pred)
+
+tabela_previsoes = pd.DataFrame({
+    "Mandante": teste["mandante"].values,
+    "Visitante": teste["visitante"].values,
+    "Resultado real": teste["resultado_mandante"].values,
+    "Resultado previsto": resultados_previstos
+})
+
+print("\nPRIMEIRAS 10 PREVISÕES")
+print(tabela_previsoes.head(10).to_string(index=False))
+
+
+
+# 6. Avaliar o modelo
+
+
+acuracia = accuracy_score(y_test, y_pred)
+
+f1_macro = f1_score(
+    y_test,
+    y_pred,
+    average="macro",
+    zero_division=0
+)
+
+print("\n========== AVALIAÇÃO DO XGBOOST ==========")
+print(f"Acurácia: {acuracia:.4f}")
+print(f"F1-macro: {f1_macro:.4f}")
+
+print("\nRELATÓRIO DE CLASSIFICAÇÃO")
+
+print(classification_report(
+    y_test,
+    y_pred,
+    labels=np.arange(len(codificador.classes_)),
+    target_names=codificador.classes_,
+    zero_division=0
+))
+
+
+
+# 7. Matriz de confusão
+
+
+matriz = confusion_matrix(
+    y_test,
+    y_pred,
+    labels=np.arange(len(codificador.classes_))
+)
+
+print("\nMATRIZ DE CONFUSÃO")
+print("Ordem:", list(codificador.classes_))
+print(matriz)
+
+visualizacao = ConfusionMatrixDisplay(
+    confusion_matrix=matriz,
+    display_labels=codificador.classes_
+)
+
+visualizacao.plot()
+plt.title("Matriz de Confusão - XGBoost Ajustado")
+plt.tight_layout()
+plt.show()
+
+
+
+# 8. Importância das variáveis
+
+
+importancias = pd.DataFrame({
+    "Variável": colunas_features,
+    "Importância": modelo.feature_importances_
+}).sort_values(
+    "Importância",
+    ascending=False
+)
+
+print("\nIMPORTÂNCIA DAS VARIÁVEIS")
+print(importancias.to_string(index=False))
+
+importancias.plot(
+    x="Variável",
+    y="Importância",
+    kind="bar",
+    legend=False
+)
+
+plt.title("Importância das Variáveis - XGBoost Ajustado")
+plt.ylabel("Importância")
+plt.xlabel("Variável")
+plt.xticks(rotation=60, ha="right")
+plt.tight_layout()
+plt.show()
+
+
+
+# 9. Comparar com um modelo de referência e regressão logística
+
+
+# Modelo de referência: sempre prevê a classe mais frequente
+modelo_base = DummyClassifier(strategy="most_frequent")
+modelo_base.fit(X_train, y_train)
+pred_base = modelo_base.predict(X_test)
+
+# Regressão Logística balanceada
+modelo_logistico = make_pipeline(
+    StandardScaler(),
+    LogisticRegression(
+        max_iter=2000,
+        class_weight="balanced",
+        random_state=42
+    )
+)
+
+modelo_logistico.fit(X_train, y_train)
+pred_logistico = modelo_logistico.predict(X_test)
+
+# Comparar as métricas
+comparacao = pd.DataFrame({
+    "Modelo": [
+        "Modelo de referência",
+        "Regressão Logística",
+        "XGBoost ajustado"
+    ],
+    "Acurácia": [
+        accuracy_score(y_test, pred_base),
+        accuracy_score(y_test, pred_logistico),
+        accuracy_score(y_test, y_pred)
+    ],
+    "F1-macro": [
+        f1_score(y_test, pred_base, average="macro", zero_division=0),
+        f1_score(y_test, pred_logistico, average="macro", zero_division=0),
+        f1_score(y_test, y_pred, average="macro", zero_division=0)
+    ]
+})
+
+print("\nCOMPARAÇÃO DOS MODELOS")
+print(comparacao.round(4).to_string(index=False))
+
+
+
+# 10. Salvar os resultados
+
+
+tabela_previsoes.to_csv(
+    "previsoes_xgboost_2025.csv",
+    index=False,
+    encoding="utf-8-sig"
+)
+
+importancias.to_csv(
+    "importancia_variaveis_xgboost.csv",
+    index=False,
+    encoding="utf-8-sig"
+)
+
+print("\nArquivos de resultados salvos!")
+
+
+
+# 11. Salvar os modelos e os dados para o site
+
+import joblib
+
+# Guardar tudo que o site precisará para fazer previsões.
+dados_modelo = {
+    "modelo": modelo,
+    "codificador": codificador,
+    "colunas_features": colunas_features,
+
+    # Histórico acumulado das partidas de cada time.
+    "historico": dict(historico),
+
+    # Rating Elo atualizado até a última partida processada.
+    "elo": dict(elo),
+
+    "vantagem_mandante": VANTAGEM_MANDANTE
+}
+
+joblib.dump(dados_modelo, "modelo_xgboost.joblib")
+
+print("\nModelo e dados salvos com sucesso!")
+print("Arquivo gerado: modelo_xgboost.joblib")

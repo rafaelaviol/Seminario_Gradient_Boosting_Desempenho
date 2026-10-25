@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador Brasileirão - Gradient Boosting & Elo Rating</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            green: '#00c853',
+                            yellow: '#ffd600',
+                            blue: '#0288d1',
+                            dark: '#080c16',
+                            card: '#111827',
+                            accent: '#1e293b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #080c16;
+            color: #f1f5f9;
+        }
+        .stadium-bg {
+            background: linear-gradient(180deg, rgba(8, 12, 22, 0.88) 0%, rgba(8, 12, 22, 0.98) 100%), 
+                        url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?q=80&w=1200&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .badge-glow {
+            box-shadow: 0 0 20px rgba(0, 200, 83, 0.25);
+        }
+    </style>
+</head>
+<body class="min-h-screen stadium-bg flex flex-col justify-between pb-10">
+
+   
+    <header class="border-b border-slate-800 glass-panel sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-green-500 to-yellow-400 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <div>
+                    <h1 class="font-black text-lg sm:text-xl text-white tracking-wide flex items-center gap-2">
+                        BRASILEIRÃO <span class="text-green-400"></span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Gradient Boosting - com temporadas 2023 e 2024</p>
+                </div>
+            </div>
+            
+           
+        </div>
+    </header>
+
+   
+    <main class="max-w-7xl mx-auto px-4 py-8 w-full space-y-8 flex-grow">
+
+      
+        <div class="glass-panel p-6 rounded-2xl border-l-4 border-l-green-500 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="space-y-1">
+                <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-green-400"></i> Simulação Automática de Confrontos
+                </h2>
+                <p class="text-sm text-slate-300">
+                    Selecione o time mandante e o visitante. As estatísticas históricas e as probabilidades de vitória, empate ou derrota são calculadas em Python pelo modelo XGBoost treinado com dados de 2023 e 2024.
+                </p>
+            </div>
+        </div>
+
+        <!-- Painel de Seleção dos Times -->
+        <div class="glass-panel p-6 sm:p-8 rounded-2xl space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-11 gap-6 items-center">
+                
+               
+                <div class="md:col-span-5 space-y-2">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-green-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-house text-sm"></i> Time Mandante (Casa)
+                    </label>
+                    <div class="relative">
+                        <select id="home-team-select" onchange="onSelectChange()" class="w-full bg-slate-900/90 border-2 border-slate-700 rounded-xl px-4 py-3.5 text-white font-bold text-base focus:outline-none focus:border-green-500 transition-all cursor-pointer appearance-none">
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                    </div>
+                </div>
+
+         
+                <div class="md:col-span-1 flex flex-col items-center justify-center pt-2 md:pt-6">
+                    <div class="w-12 h-12 rounded-full bg-slate-900 border-2 border-slate-700 flex items-center justify-center font-black text-lg text-yellow-400 shadow-xl">
+                        VS
+                    </div>
+                </div>
+
+             
+                <div class="md:col-span-5 space-y-2">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-blue-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-plane-departure text-sm"></i> Time Visitante (Fora)
+                    </label>
+                    <div class="relative">
+                        <select id="away-team-select" onchange="onSelectChange()" class="w-full bg-slate-900/90 border-2 border-slate-700 rounded-xl px-4 py-3.5 text-white font-bold text-base focus:outline-none focus:border-blue-500 transition-all cursor-pointer appearance-none">
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Botão de simular -->
+            <div class="text-center pt-2">
+                <button onclick="runSimulation()" class="w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 hover:from-green-400 hover:to-teal-400 text-slate-950 font-black text-base uppercase tracking-wider rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-3 mx-auto">
+                    <i class="fa-solid fa-play"></i> Simular Partida Agora
+                </button>
+            </div>
+        </div>
+
+        <!-- Seção dos Resultados -->
+        <div id="results-area" class="space-y-8">
+            
+        
+            <div class="glass-panel p-6 sm:p-8 rounded-2xl space-y-8 relative overflow-hidden">
+                
+                <div class="text-center space-y-1">
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-slate-400 bg-slate-900 px-3 py-1 rounded-full border border-slate-800">
+                        Resultado previsto pelo classificador XGBoost
+                    </span>
+                    <h3 class="text-2xl sm:text-3xl font-black text-white pt-2" id="match-title">Flamengo vs Palmeiras</h3>
+                </div>
+
+                <!-- Placar Mais Provável -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-6 bg-slate-900/90 py-6 px-8 rounded-2xl border border-slate-800 shadow-2xl">
+                    <div class="text-center sm:text-right min-w-[140px]">
+                        <span id="score-home-name" class="block font-black text-xl text-green-400">Flamengo</span>
+                        <span class="text-xs text-slate-400 font-semibold">Mandante (+60 Elo)</span>
+                    </div>
+
+                    <div class="flex flex-col items-center justify-center min-w-[180px] px-5 py-4 rounded-2xl border border-yellow-500/40 bg-slate-800/90">
+                        <span class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Resultado mais provável</span>
+                        <span id="predicted-result" class="text-xl sm:text-2xl text-yellow-400 font-black text-center mt-2">Carregando...</span>
+                        <span class="text-[10px] text-slate-500 mt-1">Não representa placar exato</span>
+                    </div>
+
+                    <div class="text-center sm:text-left min-w-[140px]">
+                        <span id="score-away-name" class="block font-black text-xl text-blue-400">Palmeiras</span>
+                        <span class="text-xs text-slate-400 font-semibold">Visitante</span>
+                    </div>
+                </div>
+
+                <!-- Probabilidades e Barra Progressiva -->
+                <div class="space-y-4">
+                    <div class="flex justify-between text-xs font-extrabold uppercase tracking-wider text-slate-300">
+                        <span class="text-green-400 flex items-center gap-1.5"><i class="fa-solid fa-circle text-[10px]"></i> Vitória Mandante</span>
+                        <span class="text-yellow-400 flex items-center gap-1.5"><i class="fa-solid fa-circle text-[10px]"></i> Empate</span>
+                        <span class="text-blue-400 flex items-center gap-1.5"><i class="fa-solid fa-circle text-[10px]"></i> Vitória Visitante</span>
+                    </div>
+
+                    <!-- Visual Multi-Bar -->
+                    <div class="h-7 w-full bg-slate-950 rounded-xl overflow-hidden flex p-1 gap-1 border border-slate-800 shadow-inner">
+                        <div id="bar-home" class="h-full bg-gradient-to-r from-green-600 to-green-500 rounded-l-lg transition-all duration-700 flex items-center justify-center text-xs font-black text-slate-950" style="width: 50%;">
+                            50.0%
+                        </div>
+                        <div id="bar-draw" class="h-full bg-gradient-to-r from-yellow-500 to-amber-500 transition-all duration-700 flex items-center justify-center text-xs font-black text-slate-950" style="width: 26.0%;">
+                            26.0%
+                        </div>
+                        <div id="bar-away" class="h-full bg-gradient-to-r from-blue-500 to-indigo-600 rounded-r-lg transition-all duration-700 flex items-center justify-center text-xs font-black text-slate-950" style="width: 24.0%;">
+                            24.0%
+                        </div>
+                    </div>
+
+                    <!-- Cartões de porcentagens -->
+                    <div class="grid grid-cols-3 gap-3 text-center pt-2">
+                        <div class="bg-slate-900/80 p-3.5 rounded-xl border border-green-900/40">
+                            <span id="prob-home-text" class="block text-2xl sm:text-3xl font-black text-green-400">50.0%</span>
+                            <span class="text-[11px] text-slate-400 font-medium">Chance de Vitória Casa</span>
+                        </div>
+                        <div class="bg-slate-900/80 p-3.5 rounded-xl border border-yellow-900/40">
+                            <span id="prob-draw-text" class="block text-2xl sm:text-3xl font-black text-yellow-400">26.0%</span>
+                            <span class="text-[11px] text-slate-400 font-medium">Chance de Empate</span>
+                        </div>
+                        <div class="bg-slate-900/80 p-3.5 rounded-xl border border-blue-900/40">
+                            <span id="prob-away-text" class="block text-2xl sm:text-3xl font-black text-blue-400">24.0%</span>
+                            <span class="text-[11px] text-slate-400 font-medium">Chance de Vitória Fora</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+  
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+  
+                <div class="glass-panel p-6 rounded-2xl space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-green-400"></i> Comparativo de Estatísticas Históricas
+                        </h4>
+                        <span class="text-xs text-slate-400">Calculadas pelo Python</span>
+                    </div>
+
+                    <div class="space-y-3">
+                        <!-- Elo Rating  -->
+                        <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
+                            <div class="flex justify-between text-xs font-bold">
+                                <span id="card-home-elo" class="text-green-400">1680 Elo</span>
+                                <span class="text-slate-400 uppercase tracking-wider">Elo Rating Atual</span>
+                                <span id="card-away-elo" class="text-blue-400">1665 Elo</span>
+                            </div>
+                            <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden flex">
+                                <div id="bar-elo-h" class="bg-green-500 h-full" style="width: 50%;"></div>
+                                <div id="bar-elo-a" class="bg-blue-500 h-full" style="width: 50%;"></div>
+                            </div>
+                        </div>
+
+                        <!--Cartão pontos por jogo -->
+                        <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
+                            <div class="flex justify-between text-xs font-bold">
+                                <span id="card-home-ppg" class="text-green-400">2.05 PPG</span>
+                                <span class="text-slate-400 uppercase tracking-wider">Pontos Por Jogo (PPG)</span>
+                                <span id="card-away-ppg" class="text-blue-400">1.95 PPG</span>
+                            </div>
+                            <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden flex">
+                                <div id="bar-ppg-h" class="bg-green-500 h-full" style="width: 50%;"></div>
+                                <div id="bar-ppg-a" class="bg-blue-500 h-full" style="width: 50%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Média de gols -->
+                        <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800 space-y-1.5">
+                            <div class="flex justify-between text-xs font-bold">
+                                <span id="card-home-goals" class="text-green-400">1.90 / 0.85</span>
+                                <span class="text-slate-400 uppercase tracking-wider">Média Gols (Pró / Sofridos)</span>
+                                <span id="card-away-goals" class="text-blue-400">1.75 / 0.90</span>
+                            </div>
+                            <div class="w-full bg-slate-950 h-2 rounded-full overflow-hidden flex">
+                                <div id="bar-goals-h" class="bg-green-500 h-full" style="width: 50%;"></div>
+                                <div id="bar-goals-a" class="bg-blue-500 h-full" style="width: 50%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-2 p-3 bg-slate-900/90 rounded-xl border border-slate-800 text-[11px] text-slate-400 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-yellow-400 text-sm"></i>
+                        <span>As estatísticas são calculadas a partir do histórico disponível no treinamento. O classificador utiliza as nove variáveis históricas definidas no projeto.</span>
+                    </div>
+                </div>
+
+                <!-- Radar de Equilíbrio de Forças-->
+                <div class="glass-panel p-6 rounded-2xl space-y-4 flex flex-col justify-between">
+                    <div class="flex items-center justify-between">
+                        <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-chart-radar text-yellow-400"></i> Radar de Equilíbrio de Forças
+                        </h4>
+                        <span class="text-xs text-slate-400">Visão Geral 360°</span>
+                    </div>
+                    <div class="relative h-60 sm:h-64 w-full flex items-center justify-center">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Análise técnica -->
+            <div class="glass-panel p-6 rounded-2xl space-y-3 border-l-4 border-l-yellow-500">
+                <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-brain text-yellow-400"></i> Análise Técnica do Modelo (Gradient Boosting)
+                </h4>
+                <p id="technical-analysis-text" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                </p>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500 space-y-1 mt-6">
+        <p>Simulador de resultados do Brasileirão  - Gradient Boosting</p>
+        <p >As previsões são probabilísticas e não garantem o resultado real de uma partida.</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        let radarChart = null;
+        let lastPrediction = null;
+
+        window.onload = async function () {
+            initRadarChart();
+            await populateTeamSelects();
+            await runSimulation();
+        };
+
+        async function populateTeamSelects() {
+            const homeSelect = document.getElementById('home-team-select');
+            const awaySelect = document.getElementById('away-team-select');
+
+            try {
+                const response = await fetch('/api/teams');
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Não foi possível carregar os times.');
+                }
+
+                const teamNames = data;
+                homeSelect.innerHTML = '';
+                awaySelect.innerHTML = '';
+
+                teamNames.forEach(team => {
+                    const optH = document.createElement('option');
+                    optH.value = team;
+                    optH.textContent = team;
+                    homeSelect.appendChild(optH);
+
+                    const optA = document.createElement('option');
+                    optA.value = team;
+                    optA.textContent = team;
+                    awaySelect.appendChild(optA);
+                });
+
+             
+                homeSelect.value = teamNames.includes('Flamengo') ? 'Flamengo' : (teamNames[0] || '');
+                awaySelect.value = teamNames.includes('Palmeiras')
+                    ? 'Palmeiras'
+                    : (teamNames.find(team => team !== homeSelect.value) || '');
+
+                if (teamNames.length < 2) {
+                    throw new Error('O histórico precisa conter pelo menos dois times.');
+                }
+            } catch (error) {
+                showError(error.message);
+            }
+        }
+
+        function onSelectChange() {
+            // Atualiza a previsão ao trocar qualquer um dos times.
+            runSimulation();
+        }
+
+        async function runSimulation() {
+            const homeTeam = document.getElementById('home-team-select').value;
+            const awayTeam = document.getElementById('away-team-select').value;
+
+            if (!homeTeam || !awayTeam) return;
+
+            if (homeTeam === awayTeam) {
+                showError('Por favor, selecione dois times diferentes para realizar a simulação.');
+                return;
+            }
+
+            const button = document.querySelector('button[onclick="runSimulation()"]');
+            const originalButtonHTML = button ? button.innerHTML : '';
+
+            if (button) {
+                button.disabled = true;
+                button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Calculando com XGBoost...';
+            }
+
+            try {
+                const response = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        mandante: homeTeam,
+                        visitante: awayTeam
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.erro || 'Erro ao calcular a previsão.');
+                }
+
+                lastPrediction = data;
+                updateInterface(data);
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                if (button) {
+                    button.disabled = false;
+                    button.innerHTML = originalButtonHTML;
+                }
+            }
+        }
+
+        function showError(message) {
+            const analysis = document.getElementById('technical-analysis-text');
+            if (analysis) {
+                analysis.textContent = message;
+            }
+            const result = document.getElementById('predicted-result');
+            if (result) result.textContent = 'Indisponível';
+        }
+
+        function formatPercent(value) {
+            return (value * 100).toFixed(1) + '%';
+        }
+
+        function safeRatio(a, b) {
+            const sum = Math.max(0.0001, Number(a) + Number(b));
+            return (Number(a) / sum) * 100;
+        }
+
+        function updateInterface(data) {
+            const homeTeam = data.mandante;
+            const awayTeam = data.visitante;
+            const hData = data.estatisticas.mandante;
+            const aData = data.estatisticas.visitante;
+            const probs = data.probabilidades;
+
+            // A classe "Derrota" significa derrota do mandante, portanto vitória visitante.
+            const pH = probs['Vitória'] || 0;
+            const pD = probs['Empate'] || 0;
+            const pA = probs['Derrota'] || 0;
+
+            document.getElementById('match-title').textContent = `${homeTeam} vs ${awayTeam}`;
+            document.getElementById('score-home-name').textContent = homeTeam;
+            document.getElementById('score-away-name').textContent = awayTeam;
+
+            const outcomeText = {
+                'Vitória': `Vitória de ${homeTeam}`,
+                'Empate': 'Empate',
+                'Derrota': `Vitória de ${awayTeam}`
+            };
+            document.getElementById('predicted-result').textContent =
+                outcomeText[data.resultado] || data.resultado;
+
+            // Atualiza as barras e os percentuais com predict_proba() do XGBoost.
+            const pHText = formatPercent(pH);
+            const pDText = formatPercent(pD);
+            const pAText = formatPercent(pA);
+
+            document.getElementById('bar-home').style.width = `${pH * 100}%`;
+            document.getElementById('bar-home').textContent = pHText;
+            document.getElementById('bar-draw').style.width = `${pD * 100}%`;
+            document.getElementById('bar-draw').textContent = pDText;
+            document.getElementById('bar-away').style.width = `${pA * 100}%`;
+            document.getElementById('bar-away').textContent = pAText;
+
+            document.getElementById('prob-home-text').textContent = pHText;
+            document.getElementById('prob-draw-text').textContent = pDText;
+            document.getElementById('prob-away-text').textContent = pAText;
+
+            // Estatísticas reais calculadas com o histórico salvo em Python.
+            document.getElementById('card-home-elo').textContent = `${hData.elo.toFixed(1)} Elo`;
+            document.getElementById('card-away-elo').textContent = `${aData.elo.toFixed(1)} Elo`;
+            document.getElementById('card-home-ppg').textContent = `${hData.ppg.toFixed(2)} PPG`;
+            document.getElementById('card-away-ppg').textContent = `${aData.ppg.toFixed(2)} PPG`;
+            document.getElementById('card-home-goals').textContent =
+            `${hData.gols_marcados.toFixed(2)} / ${hData.gols_sofridos.toFixed(2)}`;
+            document.getElementById('card-away-goals').textContent =
+            `${aData.gols_marcados.toFixed(2)} / ${aData.gols_sofridos.toFixed(2)}`;
+
+            document.getElementById('bar-elo-h').style.width = `${safeRatio(hData.elo, aData.elo)}%`;
+            document.getElementById('bar-elo-a').style.width = `${safeRatio(aData.elo, hData.elo)}%`;
+            document.getElementById('bar-ppg-h').style.width = `${safeRatio(hData.ppg, aData.ppg)}%`;
+            document.getElementById('bar-ppg-a').style.width = `${safeRatio(aData.ppg, hData.ppg)}%`;
+            document.getElementById('bar-goals-h').style.width =
+            `${safeRatio(hData.gols_marcados, aData.gols_marcados)}%`;
+            document.getElementById('bar-goals-a').style.width =
+            `${safeRatio(aData.gols_marcados, hData.gols_marcados)}%`;
+
+            generateAnalysisText(data);
+            updateRadarChart(homeTeam, awayTeam, hData, aData);
+        }
+
+        function generateAnalysisText(data) {
+            const homeTeam = data.mandante;
+            const awayTeam = data.visitante;
+            const hData = data.estatisticas.mandante;
+            const aData = data.estatisticas.visitante;
+            const probs = data.probabilidades;
+            const predicted = data.resultado;
+
+            const homePct = formatPercent(probs['Vitória'] || 0);
+            const drawPct = formatPercent(probs['Empate'] || 0);
+            const awayPct = formatPercent(probs['Derrota'] || 0);
+
+            let outcome;
+            if (predicted === 'Vitória') {
+                outcome = `O resultado mais provável segundo o classificador é uma vitória do mandante, ${homeTeam}.`;
+            } else if (predicted === 'Empate') {
+                outcome = 'O resultado mais provável segundo o classificador é um empate.';
+            } else {
+                outcome = `O resultado mais provável segundo o classificador é uma vitória do visitante, ${awayTeam}.`;
+            }
+
+            document.getElementById('technical-analysis-text').textContent =
+                `${outcome} O XGBoost calculou as seguintes probabilidades: vitória do mandante ${homePct}, empate ${drawPct} e vitória do visitante ${awayPct}. ` +
+                `Nas estatísticas históricas usadas como entrada, ${homeTeam} tem Elo ${hData.elo.toFixed(1)}, média de ${hData.ppg.toFixed(2)} pontos por partida e ${hData.gols_marcados.toFixed(2)} gols marcados por partida; ` +
+                `${awayTeam} tem Elo ${aData.elo.toFixed(1)}, média de ${aData.ppg.toFixed(2)} pontos por partida e ${aData.gols_marcados.toFixed(2)} gols marcados por partida. ` +
+                'Essas probabilidades são estimativas do modelo, não garantias do resultado real. O modelo classifica o resultado e não prevê o placar exato.';
+        }
+
+        function initRadarChart() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Elo Rating', 'Momentum (PPG)', 'Ataque (Gols)', 'Defesa (Solidez)', 'Força Geral'],
+                    datasets: [
+                        {
+                            label: 'Mandante',
+                            data: [50, 50, 50, 50, 50],
+                            fill: true,
+                            backgroundColor: 'rgba(0, 200, 83, 0.25)',
+                            borderColor: '#00c853',
+                            pointBackgroundColor: '#00c853'
+                        },
+                        {
+                            label: 'Visitante',
+                            data: [50, 50, 50, 50, 50],
+                            fill: true,
+                            backgroundColor: 'rgba(2, 136, 209, 0.25)',
+                            borderColor: '#0288d1',
+                            pointBackgroundColor: '#0288d1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255, 255, 255, 0.1)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                            pointLabels: { color: '#94a3b8', font: { size: 10, weight: 'bold' } },
+                            ticks: { display: false, min: 0, max: 100 }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: '#f1f5f9', font: { size: 11, weight: 'bold' } } }
+                    }
+                }
+            });
+        }
+
+        function updateRadarChart(homeName, awayName, hData, aData) {
+    if (!radarChart) return;
+
+    // Normaliza o Elo para uma escala de 0 a 100.
+    const normEloH = Math.min(100, Math.max(0, ((hData.elo - 1300) / 500) * 100));
+    const normEloA = Math.min(100, Math.max(0, ((aData.elo - 1300) / 500) * 100));
+
+    // Normaliza os pontos por jogo (PPG).
+    const normPpgH = Math.min(100, Math.max(0, (hData.ppg / 3) * 100));
+    const normPpgA = Math.min(100, Math.max(0, (aData.ppg / 3) * 100));
+
+    // Normaliza os gols marcados.
+    const normGoalsH = Math.min(100, Math.max(0, (hData.gols_marcados / 2.2) * 100));
+    const normGoalsA = Math.min(100, Math.max(0, (aData.gols_marcados / 2.2) * 100));
+
+    // Quanto menos gols sofridos, maior a pontuação defensiva.
+    const normDefH = Math.min(100, Math.max(0, (2.0 - hData.gols_sofridos) * 50));
+    const normDefA = Math.min(100, Math.max(0, (2.0 - aData.gols_sofridos) * 50));
+
+    // Atualiza os dados do time mandante.
+    radarChart.data.datasets[0].label = homeName;
+    radarChart.data.datasets[0].data = [
+        normEloH,
+        normPpgH,
+        normGoalsH,
+        normDefH,
+        (normEloH + normPpgH + normGoalsH + normDefH) / 4
+    ];
+
+    // Atualiza os dados do time visitante.
+    radarChart.data.datasets[1].label = awayName;
+    radarChart.data.datasets[1].data = [
+        normEloA,
+        normPpgA,
+        normGoalsA,
+        normDefA,
+        (normEloA + normPpgA + normGoalsA + normDefA) / 4
+    ];
+
+    // Redesenha o gráfico com os novos valores.
+    radarChart.update();
+}
+    </script>
+</body>
+</html>

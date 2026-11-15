@@ -1,0 +1,381 @@
+﻿Mandante,Visitante,Resultado real,Resultado previsto
+Juventude,EC Vitória,Vitória,Empate
+Fortaleza,Fluminense,Vitória,Vitória
+Grêmio,Atlético-MG,Vitória,Vitória
+São Paulo,Sport Recife,Empate,Vitória
+Cruzeiro,Mirassol,Vitória,Vitória
+Flamengo,Internacional,Empate,Vitória
+Palmeiras,Botafogo,Empate,Derrota
+Vasco da Gama,Santos,Vitória,Vitória
+Bahia,Corinthians,Empate,Vitória
+Bragantino,Ceará SC,Empate,Vitória
+Ceará SC,Grêmio,Vitória,Empate
+Corinthians,Vasco da Gama,Vitória,Vitória
+Botafogo,Juventude,Vitória,Vitória
+Atlético-MG,São Paulo,Empate,Vitória
+Fluminense,Bragantino,Vitória,Vitória
+Internacional,Cruzeiro,Vitória,Vitória
+Mirassol,Fortaleza,Empate,Derrota
+EC Vitória,Flamengo,Derrota,Derrota
+Sport Recife,Palmeiras,Derrota,Derrota
+Santos,Bahia,Empate,Vitória
+Juventude,Ceará SC,Vitória,Empate
+Bragantino,Botafogo,Vitória,Derrota
+Palmeiras,Corinthians,Vitória,Vitória
+Vasco da Gama,Sport Recife,Vitória,Vitória
+Bahia,Mirassol,Empate,Vitória
+Grêmio,Flamengo,Derrota,Derrota
+São Paulo,Cruzeiro,Empate,Vitória
+Fluminense,Santos,Vitória,Vitória
+Fortaleza,Internacional,Empate,Vitória
+Atlético-MG,EC Vitória,Empate,Vitória
+Ceará SC,Vasco da Gama,Vitória,Vitória
+Botafogo,São Paulo,Empate,Vitória
+Sport Recife,Bragantino,Derrota,Vitória
+Mirassol,Grêmio,Vitória,Vitória
+Internacional,Palmeiras,Derrota,Vitória
+Corinthians,Fluminense,Derrota,Vitória
+Flamengo,Juventude,Vitória,Vitória
+EC Vitória,Fortaleza,Vitória,Vitória
+Santos,Atlético-MG,Vitória,Vitória
+Cruzeiro,Bahia,Vitória,Vitória
+Corinthians,Sport Recife,Vitória,Vitória
+Vasco da Gama,Flamengo,Empate,Derrota
+Grêmio,Internacional,Empate,Vitória
+Juventude,Mirassol,Empate,Empate
+São Paulo,Santos,Vitória,Vitória
+Atlético-MG,Botafogo,Vitória,Derrota
+Fluminense,EC Vitória,Empate,Vitória
+Fortaleza,Palmeiras,Derrota,Vitória
+Bragantino,Cruzeiro,Vitória,Vitória
+Bahia,Ceará SC,Vitória,Derrota
+Internacional,Juventude,Vitória,Vitória
+Mirassol,Atlético-MG,Empate,Vitória
+Ceará SC,São Paulo,Empate,Empate
+Sport Recife,Fortaleza,Empate,Vitória
+Botafogo,Fluminense,Vitória,Vitória
+Flamengo,Corinthians,Vitória,Vitória
+EC Vitória,Grêmio,Empate,Vitória
+Palmeiras,Bahia,Derrota,Vitória
+Cruzeiro,Vasco da Gama,Vitória,Vitória
+Santos,Bragantino,Derrota,Vitória
+São Paulo,Fortaleza,Empate,Vitória
+Ceará SC,EC Vitória,Vitória,Vitória
+Corinthians,Internacional,Vitória,Vitória
+Fluminense,Sport Recife,Vitória,Vitória
+Bahia,Botafogo,Vitória,Derrota
+Grêmio,Santos,Vitória,Vitória
+Vasco da Gama,Palmeiras,Derrota,Derrota
+Cruzeiro,Flamengo,Vitória,Derrota
+Bragantino,Mirassol,Vitória,Vitória
+Juventude,Atlético-MG,Derrota,Empate
+Fortaleza,Juventude,Vitória,Vitória
+EC Vitória,Vasco da Gama,Vitória,Vitória
+Grêmio,Bragantino,Empate,Vitória
+Mirassol,Corinthians,Vitória,Vitória
+Flamengo,Bahia,Vitória,Vitória
+Sport Recife,Cruzeiro,Derrota,Vitória
+Palmeiras,São Paulo,Vitória,Vitória
+Atlético-MG,Fluminense,Vitória,Vitória
+Botafogo,Internacional,Vitória,Vitória
+Santos,Ceará SC,Empate,Vitória
+Ceará SC,Sport Recife,Vitória,Vitória
+Vasco da Gama,Fortaleza,Vitória,Vitória
+São Paulo,Grêmio,Vitória,Vitória
+Corinthians,Santos,Vitória,Vitória
+Juventude,Fluminense,Empate,Empate
+Bahia,EC Vitória,Vitória,Vitória
+Bragantino,Palmeiras,Derrota,Derrota
+Flamengo,Botafogo,Empate,Empate
+Internacional,Mirassol,Empate,Vitória
+Cruzeiro,Atlético-MG,Empate,Vitória
+Fluminense,Vasco da Gama,Vitória,Vitória
+São Paulo,Mirassol,Derrota,Vitória
+Atlético-MG,Corinthians,Empate,Vitória
+Grêmio,Bahia,Vitória,Vitória
+Palmeiras,Flamengo,Derrota,Derrota
+Sport Recife,Internacional,Empate,Derrota
+EC Vitória,Santos,Derrota,Vitória
+Fortaleza,Cruzeiro,Derrota,Vitória
+Bragantino,Juventude,Vitória,Vitória
+Bahia,São Paulo,Vitória,Empate
+Vasco da Gama,Bragantino,Derrota,Vitória
+Mirassol,Sport Recife,Vitória,Vitória
+Juventude,Grêmio,Derrota,Vitória
+Santos,Botafogo,Derrota,Derrota
+Flamengo,Fortaleza,Vitória,Vitória
+Ceará SC,Atlético-MG,Derrota,Vitória
+Corinthians,EC Vitória,Empate,Vitória
+Cruzeiro,Palmeiras,Vitória,Derrota
+Internacional,Fluminense,Derrota,Vitória
+Botafogo,Ceará SC,Vitória,Vitória
+Bragantino,Bahia,Derrota,Vitória
+EC Vitória,Cruzeiro,Empate,Vitória
+Fortaleza,Santos,Derrota,Vitória
+Grêmio,Corinthians,Empate,Vitória
+Atlético-MG,Internacional,Vitória,Vitória
+São Paulo,Vasco da Gama,Derrota,Vitória
+Flamengo,São Paulo,Vitória,Vitória
+Internacional,EC Vitória,Vitória,Vitória
+Vasco da Gama,Botafogo,Derrota,Derrota
+Bahia,Atlético-MG,Vitória,Vitória
+Corinthians,Bragantino,Derrota,Vitória
+Cruzeiro,Grêmio,Vitória,Vitória
+Fortaleza,Ceará SC,Derrota,Vitória
+Juventude,Sport Recife,Vitória,Vitória
+Palmeiras,Mirassol,Empate,Vitória
+Ceará SC,Corinthians,Derrota,Vitória
+Santos,Flamengo,Vitória,Derrota
+Botafogo,EC Vitória,Empate,Vitória
+Bragantino,São Paulo,Empate,Vitória
+Fluminense,Cruzeiro,Derrota,Vitória
+Fortaleza,Bahia,Empate,Vitória
+Vasco da Gama,Grêmio,Empate,Vitória
+Mirassol,Santos,Vitória,Vitória
+São Paulo,Corinthians,Vitória,Vitória
+Internacional,Ceará SC,Vitória,Vitória
+EC Vitória,Bragantino,Vitória,Empate
+Cruzeiro,Juventude,Vitória,Vitória
+Sport Recife,Botafogo,Derrota,Derrota
+Palmeiras,Atlético-MG,Vitória,Vitória
+Flamengo,Fluminense,Vitória,Vitória
+Fluminense,Palmeiras,Derrota,Derrota
+Ceará SC,Mirassol,Derrota,Derrota
+Corinthians,Cruzeiro,Empate,Vitória
+EC Vitória,Sport Recife,Empate,Vitória
+Santos,Internacional,Derrota,Vitória
+Bragantino,Flamengo,Derrota,Derrota
+Juventude,São Paulo,Derrota,Vitória
+Sport Recife,Santos,Empate,Vitória
+Botafogo,Corinthians,Empate,Vitória
+Fortaleza,Bragantino,Vitória,Vitória
+Mirassol,EC Vitória,Empate,Vitória
+Palmeiras,Grêmio,Vitória,Vitória
+Cruzeiro,Ceará SC,Derrota,Vitória
+São Paulo,Fluminense,Vitória,Vitória
+Bahia,Juventude,Vitória,Vitória
+Internacional,Vasco da Gama,Empate,Vitória
+Flamengo,Atlético-MG,Vitória,Vitória
+Grêmio,Fortaleza,Vitória,Vitória
+Sport Recife,Bahia,Empate,Vitória
+Mirassol,Vasco da Gama,Vitória,Vitória
+Fluminense,Grêmio,Vitória,Vitória
+Corinthians,Fortaleza,Empate,Vitória
+Botafogo,Cruzeiro,Derrota,Derrota
+Ceará SC,Flamengo,Empate,Derrota
+Atlético-MG,Bragantino,Vitória,Vitória
+EC Vitória,Palmeiras,Empate,Derrota
+Internacional,São Paulo,Derrota,Vitória
+Santos,Juventude,Vitória,Vitória
+Bragantino,Internacional,Derrota,Vitória
+São Paulo,EC Vitória,Vitória,Vitória
+Flamengo,Mirassol,Vitória,Vitória
+Fortaleza,Botafogo,Derrota,Derrota
+Bahia,Fluminense,Empate,Vitória
+Palmeiras,Ceará SC,Vitória,Vitória
+Vasco da Gama,Atlético-MG,Empate,Vitória
+Cruzeiro,Santos,Derrota,Vitória
+Grêmio,Sport Recife,Derrota,Vitória
+Juventude,Corinthians,Vitória,Vitória
+Fluminense,Fortaleza,Vitória,Vitória
+Ceará SC,Bragantino,Vitória,Vitória
+EC Vitória,Juventude,Empate,Vitória
+Sport Recife,São Paulo,Empate,Vitória
+Corinthians,Bahia,Derrota,Vitória
+Atlético-MG,Grêmio,Derrota,Vitória
+Santos,Vasco da Gama,Derrota,Empate
+Internacional,Flamengo,Derrota,Vitória
+Botafogo,Palmeiras,Derrota,Derrota
+Mirassol,Cruzeiro,Empate,Vitória
+Juventude,Vasco da Gama,Vitória,Derrota
+Bragantino,Fluminense,Vitória,Empate
+Cruzeiro,Internacional,Vitória,Vitória
+Grêmio,Ceará SC,Empate,Vitória
+Bahia,Santos,Vitória,Vitória
+Vasco da Gama,Corinthians,Derrota,Vitória
+Juventude,Botafogo,Derrota,Derrota
+Fortaleza,Mirassol,Derrota,Empate
+São Paulo,Atlético-MG,Vitória,Vitória
+Palmeiras,Sport Recife,Vitória,Vitória
+Flamengo,EC Vitória,Vitória,Vitória
+Ceará SC,Juventude,Derrota,Vitória
+Botafogo,Bragantino,Vitória,Vitória
+Cruzeiro,São Paulo,Vitória,Vitória
+Santos,Fluminense,Empate,Vitória
+Flamengo,Grêmio,Empate,Vitória
+Corinthians,Palmeiras,Empate,Derrota
+Mirassol,Bahia,Vitória,Vitória
+EC Vitória,Atlético-MG,Vitória,Vitória
+Sport Recife,Vasco da Gama,Derrota,Derrota
+Internacional,Fortaleza,Vitória,Vitória
+Fortaleza,EC Vitória,Vitória,Vitória
+Grêmio,Mirassol,Derrota,Derrota
+Palmeiras,Internacional,Vitória,Vitória
+Fluminense,Corinthians,Derrota,Vitória
+Bragantino,Sport Recife,Empate,Vitória
+Atlético-MG,Santos,Empate,Vitória
+Juventude,Flamengo,Derrota,Derrota
+São Paulo,Botafogo,Vitória,Derrota
+Vasco da Gama,Ceará SC,Empate,Vitória
+Bahia,Cruzeiro,Derrota,Vitória
+Botafogo,Mirassol,Empate,Derrota
+EC Vitória,Fluminense,Derrota,Vitória
+Ceará SC,Bahia,Empate,Vitória
+Botafogo,Atlético-MG,Vitória,Vitória
+Palmeiras,Fortaleza,Vitória,Vitória
+Mirassol,Juventude,Vitória,Vitória
+Internacional,Grêmio,Derrota,Vitória
+Sport Recife,Corinthians,Vitória,Vitória
+Flamengo,Vasco da Gama,Empate,Vitória
+Cruzeiro,Bragantino,Vitória,Vitória
+Santos,São Paulo,Vitória,Vitória
+Vasco da Gama,Bahia,Vitória,Vitória
+Grêmio,Botafogo,Empate,Derrota
+Fortaleza,Sport Recife,Vitória,Vitória
+Vasco da Gama,Cruzeiro,Vitória,Derrota
+Juventude,Internacional,Empate,Vitória
+Atlético-MG,Mirassol,Vitória,Empate
+Grêmio,EC Vitória,Vitória,Vitória
+Bahia,Palmeiras,Vitória,Derrota
+Fluminense,Botafogo,Vitória,Derrota
+Bragantino,Santos,Empate,Vitória
+Corinthians,Flamengo,Derrota,Derrota
+São Paulo,Ceará SC,Derrota,Vitória
+Atlético-MG,Juventude,Empate,Vitória
+Palmeiras,Vasco da Gama,Vitória,Vitória
+Mirassol,Bragantino,Empate,Vitória
+Sport Recife,Fluminense,Empate,Vitória
+Internacional,Corinthians,Empate,Vitória
+Santos,Grêmio,Empate,Vitória
+Botafogo,Bahia,Vitória,Vitória
+EC Vitória,Ceará SC,Vitória,Vitória
+Fortaleza,São Paulo,Derrota,Empate
+Flamengo,Cruzeiro,Empate,Vitória
+Internacional,Botafogo,Vitória,Vitória
+Fluminense,Atlético-MG,Vitória,Vitória
+Bragantino,Grêmio,Vitória,Vitória
+Corinthians,Mirassol,Vitória,Derrota
+Vasco da Gama,EC Vitória,Vitória,Vitória
+São Paulo,Palmeiras,Derrota,Derrota
+Bahia,Flamengo,Vitória,Derrota
+Juventude,Fortaleza,Derrota,Derrota
+Ceará SC,Santos,Vitória,Vitória
+Cruzeiro,Sport Recife,Empate,Vitória
+Mirassol,Fluminense,Vitória,Vitória
+Atlético-MG,Sport Recife,Vitória,Vitória
+Palmeiras,Juventude,Vitória,Vitória
+Palmeiras,Bragantino,Vitória,Vitória
+Botafogo,Flamengo,Derrota,Empate
+Mirassol,Internacional,Vitória,Vitória
+Sport Recife,Ceará SC,Empate,Vitória
+Santos,Corinthians,Vitória,Vitória
+Fortaleza,Vasco da Gama,Derrota,Vitória
+Atlético-MG,Cruzeiro,Empate,Empate
+Grêmio,São Paulo,Vitória,Vitória
+EC Vitória,Bahia,Vitória,Vitória
+Fluminense,Juventude,Vitória,Vitória
+Corinthians,Atlético-MG,Vitória,Vitória
+Cruzeiro,Fortaleza,Vitória,Vitória
+Flamengo,Palmeiras,Vitória,Empate
+Ceará SC,Botafogo,Derrota,Derrota
+Mirassol,São Paulo,Vitória,Vitória
+Internacional,Sport Recife,Vitória,Vitória
+Bahia,Grêmio,Vitória,Vitória
+Juventude,Bragantino,Vitória,Vitória
+Vasco da Gama,Fluminense,Vitória,Vitória
+Santos,EC Vitória,Derrota,Derrota
+Bahia,Internacional,Vitória,Vitória
+EC Vitória,Corinthians,Derrota,Vitória
+Atlético-MG,Ceará SC,Vitória,Empate
+Fluminense,Internacional,Vitória,Vitória
+Sport Recife,Mirassol,Derrota,Derrota
+Fortaleza,Flamengo,Vitória,Derrota
+São Paulo,Bahia,Vitória,Vitória
+Grêmio,Juventude,Vitória,Vitória
+Botafogo,Santos,Empate,Vitória
+Bragantino,Vasco da Gama,Derrota,Vitória
+Palmeiras,Cruzeiro,Empate,Vitória
+Fluminense,Ceará SC,Vitória,Vitória
+Cruzeiro,EC Vitória,Vitória,Vitória
+Santos,Fortaleza,Empate,Empate
+Mirassol,Botafogo,Empate,Vitória
+Flamengo,Sport Recife,Vitória,Vitória
+Ceará SC,Fluminense,Vitória,Vitória
+Bahia,Bragantino,Vitória,Vitória
+Corinthians,Grêmio,Vitória,Vitória
+Juventude,Palmeiras,Derrota,Derrota
+Internacional,Atlético-MG,Empate,Vitória
+Vasco da Gama,São Paulo,Derrota,Vitória
+Sport Recife,Juventude,Derrota,Vitória
+EC Vitória,Internacional,Vitória,Vitória
+Bragantino,Corinthians,Vitória,Vitória
+Botafogo,Vasco da Gama,Vitória,Vitória
+Grêmio,Cruzeiro,Derrota,Derrota
+Atlético-MG,Bahia,Vitória,Vitória
+São Paulo,Flamengo,Empate,Derrota
+Fluminense,Mirassol,Vitória,Empate
+Ceará SC,Fortaleza,Empate,Vitória
+Palmeiras,Santos,Vitória,Vitória
+Sport Recife,Atlético-MG,Derrota,Vitória
+Vasco da Gama,Juventude,Derrota,Vitória
+Internacional,Bahia,Empate,Empate
+São Paulo,Bragantino,Derrota,Vitória
+EC Vitória,Botafogo,Empate,Derrota
+Cruzeiro,Fluminense,Empate,Vitória
+Corinthians,Ceará SC,Derrota,Vitória
+Flamengo,Santos,Vitória,Vitória
+Fortaleza,Grêmio,Empate,Vitória
+Mirassol,Palmeiras,Vitória,Vitória
+Atlético-MG,Fortaleza,Empate,Vitória
+Sport Recife,Flamengo,Derrota,Derrota
+Santos,Palmeiras,Vitória,Derrota
+Bragantino,Atlético-MG,Vitória,Empate
+Botafogo,Sport Recife,Vitória,Vitória
+Fluminense,Flamengo,Vitória,Derrota
+Santos,Mirassol,Empate,Derrota
+Grêmio,Vasco da Gama,Vitória,Vitória
+Palmeiras,EC Vitória,Empate,Vitória
+Juventude,Cruzeiro,Empate,Derrota
+Bahia,Fortaleza,Derrota,Vitória
+Corinthians,São Paulo,Vitória,Vitória
+Ceará SC,Internacional,Derrota,Vitória
+Botafogo,Grêmio,Vitória,Vitória
+Palmeiras,Fluminense,Empate,Vitória
+Flamengo,Bragantino,Vitória,Vitória
+Bahia,Vasco da Gama,Vitória,Vitória
+São Paulo,Juventude,Vitória,Vitória
+Sport Recife,EC Vitória,Derrota,Vitória
+Cruzeiro,Corinthians,Vitória,Vitória
+Mirassol,Ceará SC,Vitória,Vitória
+Internacional,Santos,Empate,Vitória
+Atlético-MG,Flamengo,Empate,Derrota
+Grêmio,Palmeiras,Vitória,Derrota
+Bragantino,Fortaleza,Derrota,Empate
+Fluminense,São Paulo,Vitória,Vitória
+Juventude,Bahia,Empate,Vitória
+Vasco da Gama,Internacional,Vitória,Vitória
+Santos,Sport Recife,Vitória,Vitória
+EC Vitória,Mirassol,Vitória,Derrota
+Ceará SC,Cruzeiro,Empate,Derrota
+Fortaleza,Atlético-MG,Vitória,Vitória
+Corinthians,Botafogo,Empate,Vitória
+Vasco da Gama,Mirassol,Derrota,Derrota
+Grêmio,Fluminense,Derrota,Vitória
+Bragantino,EC Vitória,Vitória,Vitória
+Atlético-MG,Palmeiras,Derrota,Derrota
+Fortaleza,Corinthians,Vitória,Vitória
+Juventude,Santos,Derrota,Vitória
+São Paulo,Internacional,Vitória,Vitória
+Bahia,Sport Recife,Vitória,Vitória
+Flamengo,Ceará SC,Vitória,Vitória
+Cruzeiro,Botafogo,Empate,Derrota
+Mirassol,Flamengo,Empate,Vitória
+Fluminense,Bahia,Vitória,Vitória
+Ceará SC,Palmeiras,Derrota,Derrota
+Corinthians,Juventude,Empate,Vitória
+Santos,Cruzeiro,Vitória,Derrota
+Sport Recife,Grêmio,Derrota,Vitória
+EC Vitória,São Paulo,Vitória,Vitória
+Botafogo,Fortaleza,Vitória,Vitória
+Atlético-MG,Vasco da Gama,Vitória,Vitória
+Internacional,Bragantino,Vitória,Vitória

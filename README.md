@@ -99,3 +99,52 @@ Esses valores representam os resultados da execução atual e não garantem o me
 
 ## Objetivo Acadêmico
 O projeto busca aplicar e avaliar técnicas de aprendizado de máquina, comparando o XGBoost com modelos de referência e analisando suas limitações na previsão de resultados esportivos.
+
+## Funcionalidades da Aplicação
+
+A aplicação foi desenvolvida utilizando Flask para disponibilizar o modelo treinado por meio de uma interface web.
+
+O sistema conta com as seguintes funcionalidades:
+
+- **Arena de Simulação:** permite selecionar as equipes mandante e visitante para realizar uma previsão do resultado da partida.
+- **Previsão de Resultados:** apresenta as probabilidades de Vitória, Empate e Derrota pela perspectiva do mandante.
+- **Análise das Equipes:** apresenta informações históricas utilizadas pelo modelo, como rating Elo, média de pontos e médias de gols marcados e sofridos.
+- **Visualização Gráfica:** disponibiliza gráficos para facilitar a interpretação das informações e dos resultados da previsão.
+- **Laboratório de Modelos:** permite comparar diferentes modelos de aprendizado de máquina e realizar experimentos com ajustes de hiperparâmetros.
+
+## Modelos de Aprendizado de Máquina
+
+Foram utilizados modelos de referência para avaliar o desempenho do XGBoost:
+
+- **Dummy Classifier:** modelo baseline utilizado como referência inicial.
+- **Regressão Logística:** modelo utilizado para comparação com o algoritmo principal.
+- **XGBoost:** modelo baseado em Gradient Boosting, responsável pela previsão das três classes de resultados.
+
+A comparação considera métricas como acurácia e F1-macro, permitindo analisar não apenas a quantidade de previsões corretas, mas também o desempenho do modelo em cada classe.
+
+## Laboratório de Experimentos
+
+A aplicação possui uma seção dedicada à realização de experimentos com os modelos.
+
+Nessa seção, é possível:
+
+- Comparar o desempenho da Regressão Logística e do XGBoost.
+- Visualizar métricas de avaliação, como acurácia e F1-macro.
+- Ajustar hiperparâmetros do XGBoost.
+- Executar experimentos com diferentes configurações.
+- Analisar o tempo de execução e a matriz de confusão.
+
+Os experimentos permitem observar como as alterações nos hiperparâmetros influenciam o desempenho do modelo.
+
+## Estrutura da Aplicação
+
+O projeto utiliza uma API desenvolvida com Flask para conectar o modelo de aprendizado de máquina à interface web.
+
+Entre as rotas disponibilizadas estão:
+
+- `/api/teams`: disponibiliza as equipes utilizadas na simulação.
+- `/api/predict`: realiza a previsão do resultado de uma partida.
+- `/api/model-comparison`: disponibiliza os resultados da comparação entre modelos.
+- `/api/experiment`: executa experimentos com configurações de hiperparâmetros.
+
+A interface permite interagir com essas funcionalidades sem precisar executar diretamente os códigos de treinamento pelo navegador.
